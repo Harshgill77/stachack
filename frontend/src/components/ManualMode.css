@@ -1,0 +1,99 @@
+/* Desktop/Laptop Optimized ManualMode */
+.manual-mode {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.input-screen {
+  background: var(--bg-white);
+  padding: 3.5rem;
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+}
+
+.input-screen h2 {
+  font-size: 2.25rem;
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.form-subtitle {
+  color: var(--text-gray);
+  margin-bottom: 3.5rem;
+  font-size: 1.15rem;
+}
+
+.manual-form {
+  margin-top: 2rem;
+}
+
+.section {
+  margin-bottom: 3.5rem;
+}
+
+.section h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-dark);
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 3px solid var(--border-light);
+  font-weight: 600;
+}
+
+.mode-badge {
+  background: var(--light-green);
+  color: var(--dark-green);
+  padding: 1rem 1.5rem;
+  border-radius: 14px;
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+}
+
+.result-actions {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.result-actions .btn {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .manual-mode {
+    max-width: 100%;
+  }
+
+  .input-screen {
+    padding: 2rem 1.5rem;
+  }
+
+  .input-screen h2 {
+    font-size: 1.75rem;
+  }
+
+  .section h3 {
+    font-size: 1.25rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .result-actions {
+    flex-direction: column;
+  }
+
+  .result-actions .btn {
+    min-width: auto;
+  }
+}

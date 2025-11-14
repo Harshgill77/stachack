@@ -1,0 +1,388 @@
+/* Desktop/Laptop Optimized LiveMode */
+.live-mode {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.back-btn {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  padding: 1rem 2rem;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  margin-bottom: 2.5rem;
+  transition: all 0.3s;
+  font-weight: 500;
+}
+
+.back-btn:hover {
+  background: var(--bg-light);
+  transform: translateX(-8px);
+}
+
+/* Permission Screen - Larger for Desktop */
+.permission-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 500px;
+}
+
+.permission-card {
+  background: var(--bg-white);
+  padding: 4rem 3.5rem;
+  border-radius: 24px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  max-width: 650px;
+  width: 100%;
+}
+
+.permission-icon {
+  color: var(--primary-green);
+  margin-bottom: 2rem;
+}
+
+.permission-card h2 {
+  font-size: 2.25rem;
+  color: var(--text-dark);
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.permission-card p {
+  color: var(--text-gray);
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+  font-size: 1.15rem;
+}
+
+.permission-card .info-note {
+  background: var(--light-green);
+  color: var(--dark-green);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 3rem;
+  border-left: 4px solid var(--primary-green);
+}
+
+.permission-buttons {
+  display: flex;
+  gap: 1.5rem;
+}
+
+/* Input Screen - Desktop Layout */
+.input-screen {
+  background: var(--bg-white);
+  padding: 3.5rem;
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+}
+
+.location-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--light-green);
+  color: var(--dark-green);
+  padding: 0.875rem 1.5rem;
+  border-radius: 24px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.input-screen h2 {
+  font-size: 2.25rem;
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.form-subtitle {
+  color: var(--text-gray);
+  margin-bottom: 3rem;
+  font-size: 1.15rem;
+}
+
+.soil-form {
+  margin-top: 2rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 0.75rem;
+  font-size: 1.05rem;
+}
+
+.form-group input {
+  padding: 1.125rem 1.25rem;
+  border: 2px solid var(--border-light);
+  border-radius: 14px;
+  font-size: 1.1rem;
+  transition: all 0.3s;
+  background: var(--bg-white);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+}
+
+/* Buttons - Larger for Desktop */
+.btn {
+  padding: 1.125rem 2.5rem;
+  border: none;
+  border-radius: 14px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.btn-primary {
+  background: var(--primary-green);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--dark-green);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(16, 185, 129, 0.35);
+}
+
+.btn-secondary {
+  background: var(--bg-light);
+  color: var(--text-dark);
+  border: 1px solid var(--border-light);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-white);
+  transform: translateY(-2px);
+}
+
+.btn-large {
+  width: 100%;
+  padding: 1.25rem;
+  font-size: 1.25rem;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Result Screen - Desktop Layout */
+.result-screen {
+  display: flex;
+  justify-content: center;
+}
+
+.result-card {
+  background: var(--bg-white);
+  padding: 4rem 3.5rem;
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  width: 100%;
+  text-align: center;
+}
+
+.result-icon {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 2rem;
+  color: white;
+}
+
+.result-card h2 {
+  font-size: 1.75rem;
+  color: var(--text-gray);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.crop-name {
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--primary-green);
+  margin-bottom: 3.5rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+.result-details {
+  text-align: left;
+  margin-bottom: 3rem;
+}
+
+.detail-section {
+  background: var(--bg-light);
+  padding: 2rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+}
+
+.detail-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-dark);
+  font-size: 1.35rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.detail-section p {
+  color: var(--text-gray);
+  line-height: 1.7;
+  font-size: 1.05rem;
+}
+
+.coordinates {
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+
+.weather-grid,
+.soil-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.weather-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg-white);
+  border-radius: 12px;
+  font-weight: 600;
+  color: var(--text-dark);
+  font-size: 1.05rem;
+}
+
+.soil-grid div {
+  background: var(--bg-white);
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  font-weight: 600;
+  color: var(--text-dark);
+  font-size: 1.05rem;
+  text-align: center;
+}
+
+.error-message {
+  background: #fee2e2;
+  color: #dc2626;
+  padding: 1.125rem 1.5rem;
+  border-radius: 14px;
+  margin-bottom: 2rem;
+  font-size: 1.05rem;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .live-mode {
+    max-width: 100%;
+  }
+
+  .back-btn {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .permission-card {
+    padding: 2.5rem 2rem;
+    margin: 0 1rem;
+  }
+
+  .permission-card h2 {
+    font-size: 1.75rem;
+  }
+
+  .permission-card p {
+    font-size: 1rem;
+  }
+
+  .permission-buttons {
+    flex-direction: column;
+  }
+
+  .input-screen {
+    padding: 2rem 1.5rem;
+  }
+
+  .input-screen h2 {
+    font-size: 1.75rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .result-card {
+    padding: 2.5rem 2rem;
+  }
+
+  .result-icon {
+    width: 90px;
+    height: 90px;
+  }
+
+  .crop-name {
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+  }
+
+  .detail-section {
+    padding: 1.5rem;
+  }
+
+  .weather-grid,
+  .soil-grid {
+    grid-template-columns: 1fr;
+  }
+}
