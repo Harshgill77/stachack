@@ -1,16 +1,22 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sprout, Leaf, Menu, X } from 'lucide-react';
+import { Sprout, Leaf, Menu, X, MapPin, CloudSun, ClipboardList, Thermometer, WifiOff, Home } from 'lucide-react';
 import LiveMode from './components/LiveMode';
 import ManualMode from './components/ManualMode';
+import LandingPage from './components/LandingPage';
+import ChatBot from './components/ChatBot';
 import './App.css';
 
 function App() {
-  const [mode, setMode] = useState(null);
+  const [page, setPage] = useState('home');
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const resetMode = () => setMode(null);
   const toggleMenu = () => setMenuOpen(!menuOpen);
+
+  const navigateToSelector = () => setPage('selector');
+  const navigateToLive = () => setPage('live');
+  const navigateToManual = () => setPage('manual');
+  const navigateToHome = () => setPage('home');
 
   return (
     <div className="app">
@@ -26,20 +32,24 @@ function App() {
             <Sprout className="logo-icon" size={32} />
             <div>
               <h1>CropSense</h1>
-              <h3 className="logo-subtitle">Smart Shield For Smart Farming</h3>
-              <p> Innovate,Protect,Grow</p>
+              {/* <h3 className="logo-subtitle">Smart Shield For Smart Farming</h3> */}
+              
             </div>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="nav-features desktop-nav">
             <div className="nav-item">
+              <Home size={18} />
+              <span onClick={navigateToHome} style={{ cursor: 'pointer' }}>Home</span>
+            </div>
+            <div className="nav-item">
               <Sprout size={18} />
-              <span>Smart Analysis</span>
+              <span onClick={navigateToSelector} style={{ cursor: 'pointer' }}>Smart Analysis</span>
             </div>
             <div className="nav-item">
               <Leaf size={18} />
-              <span>Real-time Weather</span>
+              <span onClick={navigateToLive} style={{ cursor: 'pointer' }}>Live Analysis</span>
             </div>
           </nav>
 
@@ -59,13 +69,17 @@ function App() {
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="mobile-menu-item">
+              <div className="mobile-menu-item" onClick={() => { navigateToHome(); toggleMenu(); }}>
+                <Home size={20} />
+                <span>Home</span>
+              </div>
+              <div className="mobile-menu-item" onClick={() => { navigateToSelector(); toggleMenu(); }}>
                 <Sprout size={20} />
                 <span>Smart Analysis</span>
               </div>
-              <div className="mobile-menu-item">
+              <div className="mobile-menu-item" onClick={() => { navigateToLive(); toggleMenu(); }}>
                 <Leaf size={20} />
-                <span>Real-time Weather</span>
+                <span>Live Analysis</span>
               </div>
             </motion.div>
           )}
@@ -74,7 +88,11 @@ function App() {
 
       {/* Main Content */}
       <main className="main-content">
-        {!mode ? (
+        {page === 'home' && (
+          <LandingPage onGetStarted={navigateToSelector} />
+        )}
+
+        {page === 'selector' && (
           <motion.div 
             className="mode-selection"
             initial={{ scale: 0.9, opacity: 0 }}
@@ -90,7 +108,7 @@ function App() {
                 className="mode-card"
                 whileHover={{ scale: 1.05, y: -5 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => setMode('live')}
+                onClick={navigateToLive}
               >
                 <div className="mode-icon live-icon">
                   <Sprout size={48} />
@@ -98,9 +116,9 @@ function App() {
                 <h3>Live Mode</h3>
                 <p>Auto-detect location and fetch real-time weather data</p>
                 <ul className="features">
-                  <li>📍 Auto location detection</li>
-                  <li>🌤️ Real-time weather</li>
-                  <li>✍️ Manual soil data</li>
+                  <li><MapPin size={20} /> GPS-Based Location Tracking</li>
+                  <li><CloudSun size={20} /> Live Meteorological Data Integration</li>
+                  <li><ClipboardList size={20} /> Customizable Soil Parameters</li>
                 </ul>
                 <button className="select-btn">Get Started →</button>
               </motion.div>
@@ -110,7 +128,7 @@ function App() {
                 className="mode-card"
                 whileHover={{ scale: 1.05, y: -5 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => setMode('manual')}
+                onClick={navigateToManual}
               >
                 <div className="mode-icon manual-icon">
                   <Leaf size={48} />
@@ -118,34 +136,61 @@ function App() {
                 <h3>Manual Mode</h3>
                 <p>Enter all data manually for custom analysis</p>
                 <ul className="features">
-                  <li>✍️ Manual soil data</li>
-                  <li>🌡️ Manual weather</li>
-                  <li>🔄 Offline capable</li>
+                  <li><ClipboardList size={20} /> Comprehensive Soil Data Input</li>
+                  <li><Thermometer size={20} /> User-Defined Weather Conditions</li>
+                  <li><WifiOff size={20} /> Offline Analysis Support</li>
                 </ul>
                 <button className="select-btn">Get Started →</button>
               </motion.div>
             </div>
           </motion.div>
-        ) : (
+        )}
+
+        {page === 'live' && (
           <div className="mode-container">
-            {mode === 'live' ? (
-              <LiveMode onBack={resetMode} />
-            ) : (
-              <ManualMode onBack={resetMode} />
-            )}
+            <LiveMode onBack={navigateToSelector} />
+          </div>
+        )}
+
+        {page === 'manual' && (
+          <div className="mode-container">
+            <ManualMode onBack={navigateToSelector} />
           </div>
         )}
       </main>
 
       {/* Footer */}
-      {/* <motion.footer 
+      {/* Footer */}
+      <motion.footer 
         className="footer"
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
-        <p>Powered by NASA Weather API & OpenWeatherMap</p>
-      </motion.footer> */}
+        <div className="footer-content">
+          <div className="footer-section">
+            <h4>CropSense</h4>
+            <p>Empowering farmers with AI-driven insights for a sustainable future.</p>
+          </div>
+          <div className="footer-section">
+            <h4>Quick Links</h4>
+            <span onClick={navigateToHome}>Home</span>
+            <span onClick={navigateToSelector}>Smart Analysis</span>
+            <span onClick={navigateToLive}>Live Analysis</span>
+          </div>
+          <div className="footer-section">
+            <h4>Contact</h4>
+            <p>support@cropsense.com</p>
+            <p>+91 7707891701</p>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <p>© 2024 CropSense. Powered by Genconians and OpenWeatherMap</p>
+        </div>
+      </motion.footer>
+
+      {/* Global ChatBot */}
+      <ChatBot />
     </div>
   );
 }

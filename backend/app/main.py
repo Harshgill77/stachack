@@ -2,6 +2,10 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import sys
 import os
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 
 # Add parent directory to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -13,10 +17,69 @@ CORS(app)  # Enable CORS for React frontend
 
 API_KEY = "8f96af8e0f2466de3a56b467fd29ea79"
 
+# Load Chatbot Data
+try:
+    csv_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'chatbot_data.csv')
+    df = pd.read_csv(csv_path)
+    questions = df['question'].tolist()
+    answers = df['answer'].tolist()
+    
+    # Initialize Vectorizer
+    vectorizer = TfidfVectorizer()
+    tfidf_matrix = vectorizer.fit_transform(questions)
+    print("✅ Chatbot data loaded and vectorized successfully.")
+except Exception as e:
+    print(f"❌ Error loading chatbot data: {e}")
+    questions = []
+    answers = []
+    vectorizer = None
+    tfidf_matrix = None
+
 @app.route('/api/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
     return jsonify({"status": "healthy", "message": "Crop Recommendation API is running"})
+
+@app.route('/api/chat', methods=['POST'])
+def chat():
+    """Chatbot endpoint using TF-IDF and Cosine Similarity"""
+    try:
+        data = request.json
+        user_query = data.get('query', '').strip()
+        
+        if not user_query:
+            return jsonify({"success": False, "error": "Query is required"}), 400
+            
+        if vectorizer is None or tfidf_matrix is None:
+            return jsonify({"success": False, "error": "Chatbot is not initialized"}), 500
+
+        # Vectorize user query
+        user_tfidf = vectorizer.transform([user_query])
+        
+        # Calculate cosine similarity
+        similarities = cosine_similarity(user_tfidf, tfidf_matrix).flatten()
+        
+        # Find best match
+        best_match_index = np.argmax(similarities)
+        best_score = similarities[best_match_index]
+        
+        # Threshold for relevance (adjust as needed)
+        if best_score > 0.2:
+            response = answers[best_match_index]
+        else:
+            response = "I'm sorry, I don't have information on that specific topic yet. Please try asking about crops, soil, or farming practices."
+            
+        return jsonify({
+            "success": True,
+            "response": response,
+            "score": float(best_score)
+        })
+        
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
 
 @app.route('/api/location', methods=['GET'])
 def detect_location():
@@ -130,6 +193,7 @@ if __name__ == '__main__':
     print("📋 API Endpoints:")
     print("  • GET  /api/health          - Health check")
     print("  • GET  /api/location        - Detect location")
+    print("  • POST /api/chat            - AI Chatbot")
     print("  • POST /api/recommend/live  - Live mode recommendation")
     print("  • POST /api/recommend/manual - Manual mode recommendation")
     print("\n" + "="*60 + "\n")

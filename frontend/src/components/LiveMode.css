@@ -70,7 +70,7 @@
   font-size: 1rem;
   line-height: 1.6;
   margin-bottom: 3rem;
-  border-left: 4px solid var(--primary-green);
+  /* border-left: 4px solid var(--primary-green); */
 }
 
 .permission-buttons {
@@ -318,8 +318,13 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Mobile Responsive */
