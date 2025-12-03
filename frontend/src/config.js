@@ -1,16 +1,9 @@
-// API Configuration
-// Auto-detects if accessing from network or localhost
+// src/config.js
 
-const getApiUrl = () => {
-  const hostname = window.location.hostname;
-  
-  // If accessing via IP address (from phone), use that IP for API
-  if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
-    return `http://${hostname}:5001/api`;
-  }
-  
-  // If on localhost (laptop), use localhost
-  return 'http://localhost:5001/api';
-};
+// Use Render backend URL from environment variable
+const API_BASE =
+  import.meta.env.VITE_API_URL ||
+  `${window.location.protocol}//${window.location.hostname}`;
 
-export const API_URL = getApiUrl();
+// Ensure no trailing slash, then create /api path
+export const API_URL = `${API_BASE.replace(/\/$/, "")}/api`;
