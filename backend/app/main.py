@@ -7,6 +7,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
+
+
 # Add parent directory to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -39,6 +41,10 @@ except Exception as e:
 def health_check():
     """Health check endpoint"""
     return jsonify({"status": "healthy", "message": "Crop Recommendation API is running"})
+
+@app.route("/")
+def index():
+    return {"status": "ok", "service": "crop-backend"}, 200    
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
