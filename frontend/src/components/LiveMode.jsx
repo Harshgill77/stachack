@@ -5,6 +5,23 @@ import axios from 'axios';
 import { API_URL } from '../config';
 import './LiveMode.css';
 
+// request browser/location (returns { latitude, longitude })
+async function getBrowserLocation() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      return reject(new Error("Geolocation not supported by this browser"));
+    }
+    navigator.geolocation.getCurrentPosition(
+      pos => resolve({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }),
+      err => reject(err),
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  });
+}
+
+
+
+
 function LiveMode({ onBack }) {
   const [step, setStep] = useState('permission');
   const [loading, setLoading] = useState(false);
@@ -19,53 +36,129 @@ function LiveMode({ onBack }) {
   const [error, setError] = useState('');
 
   const handleLocationPermission = async (allow) => {
-    if (allow) {
-      setLoading(true);
+  if (allow) {
+    setLoading(true);
+    try {
+      // First try browser geolocation (prompts user)
       try {
-        const response = await axios.get(`${API_URL}/location`);
-        if (response.data.success) {
-          setLocation(response.data.location);
+        const { latitude, longitude } = await getBrowserLocation();
+        
+        // Fetch city name using reverse geocoding
+        let city = "Detected Location";
+        let country = "";
+        
+        try {
+          const geoRes = await axios.get(
+            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+          );
+          if (geoRes.data) {
+            city = geoRes.data.city || geoRes.data.locality || "Detected Location";
+            country = geoRes.data.countryName || "";
+          }
+        } catch (error) {
+          console.error("Reverse geocoding failed:", error);
+        }
+
+        // If success, set location from browser coords
+        setLocation({
+          city,
+          country,
+          latitude,
+          longitude
+        });
+        setStep('input');
+      } catch (geoErr) {
+        // If browser geolocation fails/denied -> fallback to server IP-based detection
+        console.warn("Browser geolocation failed:", geoErr, "Falling back to server IP detection.");
+        try {
+          const response = await axios.get(`${API_URL}/location`);
+          if (response.data.success) {
+            setLocation(response.data.location);
+          } else {
+            // fallback default
+            setLocation({ city: 'Ludhiana', country: 'India', latitude: 30.9, longitude: 75.8 });
+          }
+          setStep('input');
+        } catch (err) {
+          console.log('Location detection not available (server fallback failed), using default location', err);
+          setLocation({ city: 'Ludhiana', country: 'India', latitude: 30.9, longitude: 75.8 });
           setStep('input');
         }
-      } catch (err) {
-        // Silently use default location - this is normal behavior
-        console.log('Location detection not available, using default location');
-        setLocation({ city: 'Ludhiana', country: 'India', latitude: 30.9, longitude: 75.8 });
-        setStep('input');
-      } finally {
-        setLoading(false);
       }
-    } else {
-      setLocation({ city: 'Ludhiana', country: 'India', latitude: 30.9, longitude: 75.8 });
-      setStep('input');
+    } finally {
+      setLoading(false);
     }
-  };
+  } else {
+    // user chose to use default location
+    setLocation({ city: 'Ludhiana', country: 'India', latitude: 30.9, longitude: 75.8 });
+    setStep('input');
+  }
+};
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+  e.preventDefault();
+  setLoading(true);
+  setError('');
 
-    try {
-      const response = await axios.post(`${API_URL}/recommend/live`, {
-        ...formData,
-        useCurrentLocation: true
+  try {
+    // prepare numeric input values
+    const payloadInputs = {
+      N: Number(formData.N),
+      P: Number(formData.P),
+      K: Number(formData.K),
+      ph: Number(formData.ph)
+    };
+
+    // if we already have location from browser or server, send those coordinates
+    if (location && location.latitude != null && location.longitude != null) {
+      const payload = {
+        ...payloadInputs,
+        useCurrentLocation: false,
+        latitude: Number(location.latitude),
+        longitude: Number(location.longitude),
+        city: location.city || '',
+        country: location.country || ''
+      };
+
+      const response = await axios.post(`${API_URL}/recommend/live`, payload, {
+        headers: { "Content-Type": "application/json" }
       });
 
       if (response.data.success) {
         setResult(response.data);
         setStep('result');
+      } else {
+        setError(response.data.error || 'Failed to get recommendation');
       }
-    } catch (err) {
-      setError(err.response?.data?.error || 'Failed to get recommendation');
-    } finally {
-      setLoading(false);
+    } else {
+      // no client coords — tell server to auto-detect (IP-based)
+      const payloadFallback = {
+        ...payloadInputs,
+        useCurrentLocation: true
+      };
+
+      const response = await axios.post(`${API_URL}/recommend/live`, payloadFallback, {
+        headers: { "Content-Type": "application/json" }
+      });
+
+      if (response.data.success) {
+        setResult(response.data);
+        setStep('result');
+      } else {
+        setError(response.data.error || 'Failed to get recommendation');
+      }
     }
-  };
+  } catch (err) {
+    console.error(err);
+    setError(err.response?.data?.error || 'Failed to get recommendation');
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <motion.div

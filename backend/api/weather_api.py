@@ -28,13 +28,14 @@ def get_weather(lat, lon, api_key):
 # -------------------------------
 # 🌧️ 2. NASA POWER API (Rainfall)
 # -------------------------------
-def get_nasa_rainfall(lat, lon, days=7):
+def get_nasa_rainfall(lat, lon, days=30):
     """
-    Fetches average daily rainfall (in mm/day) for the past 'days'
+    Fetches average daily rainfall (in mm/day) for the past 'days' (default 30)
     using NASA POWER API (no API key required).
     """
     try:
-        end_date = datetime.datetime.now().date()
+        # Use a 5-day lag to ensure data availability (NASA POWER has a delay)
+        end_date = datetime.datetime.now().date() - datetime.timedelta(days=5)
         start_date = end_date - datetime.timedelta(days=days)
 
         url = (
@@ -69,7 +70,7 @@ def get_nasa_rainfall(lat, lon, days=7):
 # -------------------------------
 # 🌍 3. COMBINED FUNCTION
 # -------------------------------
-def get_weather_and_rainfall(lat, lon, api_key, days=7):
+def get_weather_and_rainfall(lat, lon, api_key, days=30):
     """
     Combines OpenWeather (for temp & humidity)
     and NASA POWER (for rainfall) into one call.
