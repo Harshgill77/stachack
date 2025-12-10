@@ -2,6 +2,7 @@
 
 An intelligent crop recommendation system using Machine Learning that provides personalized crop suggestions based on soil parameters and weather conditions.
 
+🌐 check live : https://crop-frontend-6hx9.onrender.com
 ---
 
 ## 📋 Table of Contents
